@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 
 export const globalContext = createContext();
@@ -50,16 +51,14 @@ export const GlobalProvider = ({ children }) => {
   
   
           const response = await axios.post(`http://localhost:3028/api/users/${user?._id}/wishlist/${id}`, {}, config);
-          
-          console.log(response); // Log the response for debugging
-  
+            
           if (response.status === 200) {
-              console.log("Product added to wishlist");
+              toast.success("Product added to wishlist");
           } else {
-              console.error("Error adding product to wishlist:", response.data); // Log error response
+              toast.error(error.response.data.message); 
           }
       } catch (error) {
-          console.error("Error:", error.response.data.message); // Log any other errors
+          toast.error(error.response.data.message);
       }
   };
   
@@ -84,15 +83,13 @@ export const GlobalProvider = ({ children }) => {
 
     const response = await axios.post(`http://localhost:3028/api/users/${user?._id}/cart/${id}`, {}, config);
       
-      console.log(response); // Log the response for debugging
-
       if (response.status === 200) {
-          console.log("Product added to cart");
+          toast.success("Product added to cart!");
       } else {
-          console.error("Error adding product to cart:", response.data); // Log error response
+          toast.error( error.response.data.message);
       }
   } catch (error) {
-      console.error("Error:", error.response.data.message); // Log any other errors
+      toast.error( error.response.data.message); 
   }
   
   };

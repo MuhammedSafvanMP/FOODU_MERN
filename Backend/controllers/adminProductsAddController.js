@@ -4,8 +4,8 @@ import productJoi from "../validation/productJoi.js";
 
 // create products
 
-export const createProducts = async (req, res, next) => {
-    try {
+export const createProducts = async (req, res, ) => {
+    
         // Manual validation (optional but recommended)
         // const { title, description, price, category } = req.body;
         // if (!title || !description || !price || !category) {
@@ -14,8 +14,12 @@ export const createProducts = async (req, res, next) => {
 
         // Validate request body using Joi
         
-        const result = await productJoi.validateAsync(req.body);
+        const { result, error  }= await productJoi.validateAsync(req.body);
         
+
+        if (error) {
+            return res.status(422).json({ message: "Validation Error", data: error.details });
+        }
 
         const newProduct = new Products({
             title: result.title,
@@ -27,32 +31,23 @@ export const createProducts = async (req, res, next) => {
         });
 
         await newProduct.save();
-        return res.status(201).json({ message: "Product created successfully" });
-    } catch (error) {
-        if (error.isJoi === true) {
-            return res.status(422).json({ message: "Validation Error", details: error.details });
-        } else {
-            // Handle other types of errors
-          return  next(error)
-        }
-    }
+        return res.status(201).json({ status: "created",  message: "Product created successfully" });
+
+    
 };
 
 
 // view all products 
 
-export const  adminViewAllProducts = async (req, res, next) => {
-    try {
+export const  adminViewAllProducts = async (req, res) => {
+   
         const allProcucts = await Products.find();
 
         if(!allProcucts){
-            return res.status(404).json({message: "Product not found"});
+            return res.status(404).json({ status: "error",  message: "Product not found"});
         }
 
-        res.status(200).json(allProcucts);
-    } catch (error) {
-        next(error);
-    }
+        res.status(200).json({ status: "Ok", message: "Product found", data: allProcucts});
 }
 
 
@@ -77,9 +72,9 @@ export const adminViewProductById = async (req, res, next) => {
 // view product by category 
 
 
-export const adminProductByCategory = async (req, res, next) => {                                                                                            
+export const adminProductByCategory = async (req, res ) => {                                                                                            
 
-    try {
+
         const { categoryname } = req.params;
             // Find products by category
             const products = await Products.find({
@@ -90,31 +85,25 @@ export const adminProductByCategory = async (req, res, next) => {
             }).select('title category price');
             
             if (products.length === 0) {
-                return res.status(404).json({ message: "No items found in the given category" });
+                return res.status(404).json({   message: "No items found in the given category" });
             }
             
-            res.status(200).json({ products });
-        } catch (error) {
-            return next(errorHandler(404, "Unable to get products by category", error));
-        }
-
+            res.status(200).json({ status: "Ok" ,  message: "Product found",  data:products });
 };
 
 
 // update products
-
-export const adminUpdateProducts = async (req, res, next) => {
-    try {
-        const { productId } = req.params;
+export const adminUpdateProducts = async (req, res) => {
+ 
+        const  productId  = req.params.id;
 
         const findProduct = await Products.findById(productId);
 
         if (!findProduct) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ status: "error", message: "Product not found" });
         }
-
-       const { title, description, price, category, stock } = req.body;
-
+        const { title, description, price, category, stock } =  req.body;
+        
         // Update the product properties if they exist in the request body
         if (title) findProduct.title = title;
         if (description) findProduct.description = description;
@@ -126,31 +115,23 @@ export const adminUpdateProducts = async (req, res, next) => {
         // Save the updated product
         await findProduct.save();
 
-        res.status(200).json({ message: "Product successfully updated" });
-
-    } catch (error) {
-        return next(error);
-    }
-}
+        res.status(200).json({ status: "Ok", message: "Product successfully updated" });
+};
 
 
 
 
 // delete product
 
-export const adminDeleteProductById = async (req, res, next) => {
-    try {
+export const adminDeleteProductById = async (req, res) => {
+    
         const { productId } = req.params;
 
         const productDelete = await Products.findByIdAndDelete(productId);
 
         if (!productDelete) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ status: "error",  message: "Product not found" });
         }
 
-        res.status(200).json({ message: "Product deleted successfully" });
-
-    } catch (error) {
-        return next(error);
-    }
+        res.status(200).json({ status: "Ok", message: "Product deleted successfully" });
 }

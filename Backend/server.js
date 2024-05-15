@@ -5,10 +5,13 @@ import authRoute from "./routes/authRoute.js";
 import productRoute from "./routes/productRoute.js";
 import adminRoute from "./routes/adminRoute.js";
 import cors  from "cors";
+import bodyParser from "body-parser";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 7000
 
@@ -27,15 +30,15 @@ app.use("/api/admin", adminRoute);
 
 
 // custom middleware
-app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    return res.status(statusCode).json({
-        success: false,
-        message,
-        statusCode
-    })
-})
+// app.use((err, req, res, next) => {
+//     const statusCode = err.statusCode || 500;
+//     const message = err.message || "Internal Server Error";
+//     return res.status(statusCode).json({
+//         success: false,
+//         message,
+//         statusCode
+//     })
+// })
 
 
 // DB connecting

@@ -1,20 +1,13 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 
 const newsale = new mongoose.Schema({
-    userId : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Users',
-        require : true
-    },
-    productId : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'products',
-    }, 
-    orderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Orders'
-    }
+    saleProducts: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Products' // Make sure this references your Products model
+        }
+      ]
  
 })
 

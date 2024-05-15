@@ -4,50 +4,53 @@ import uploadImage from "../middlewares/upload.js";
 import { adminToken } from "../middlewares/adminMiddleware.js";
 import {  adminBlockUserById, adminFindUserName, adminLogin, adminUnBlockUserById, adminViewUserById, allUsers } from "../controllers/adminController.js";
 import { adminOrderDetails, status } from "../controllers/adminOrders.js";
+import { TrycatchMiddleware } from "../middlewares/error.js";
 
 const router = express.Router();
+
 
 // login
 router.post("/login", adminLogin);
 
-
+// token provide all rotes
+router.use(adminToken)
 
 // admin routes
 // view all users
-router.get("/viewAllUsers", adminToken,   allUsers); 
+router.get("/viewAllUsers",   TrycatchMiddleware( allUsers)); 
 // view user by id
-router.get("/user/:id", adminToken,  adminViewUserById); 
+router.get("/user/:id",  TrycatchMiddleware( adminViewUserById)); 
 // search user name
-router.get("/user/findName/:username", adminToken, adminFindUserName);
+router.get("/user/findName/:username", TrycatchMiddleware( adminFindUserName));
 // delete user
-router.delete("/user/block/:userId", adminToken, adminBlockUserById);
-router.delete("/user/unblock/:userId", adminToken, adminUnBlockUserById);
+router.delete("/user/block/:userId",  TrycatchMiddleware(adminBlockUserById));
+router.delete("/user/unblock/:userId",  TrycatchMiddleware(adminUnBlockUserById));
 
 
 
 
 
 // product creating
-router.post("/createProducts", adminToken,  uploadImage, createProducts); 
+router.post("/createProducts",   uploadImage, TrycatchMiddleware(createProducts)); 
 // view all products
-router.get("/products", adminToken, adminViewAllProducts);
+router.get("/products",  TrycatchMiddleware(adminViewAllProducts));
 // view spesific user
-router.get("/products/:id", adminToken, adminViewProductById);
+router.get("/products/:id", TrycatchMiddleware(adminViewProductById));
 // view product category
-router.get("/products/category/:categoryname", adminToken, adminProductByCategory);
+router.get("/products/category/:categoryname",  TrycatchMiddleware(adminProductByCategory));
 // edit product by id
-router.patch("/products/edit/:productId", adminToken, adminUpdateProducts);
+router.put("/products/edit/:id",  uploadImage, TrycatchMiddleware(adminUpdateProducts));
 // delete product by id
-router.delete("/products/delete/:productId", adminToken, adminDeleteProductById);
+router.delete("/products/delete/:productId",  TrycatchMiddleware(adminDeleteProductById));
 
 
 
 // orders routes
 
 // view all orders
-router.get('/orders', adminToken, adminOrderDetails);
+router.get('/orders', TrycatchMiddleware(adminOrderDetails));
 // view all revenue status
-router.get('/status',  status);
+router.get('/status',  TrycatchMiddleware(status));
 
 
 

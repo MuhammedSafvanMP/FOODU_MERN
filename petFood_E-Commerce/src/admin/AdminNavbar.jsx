@@ -1,14 +1,13 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-
 export default function AdminNavbar() {
-  const navigate  = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-     navigate("/")
-  }
+    localStorage.removeItem("adminToken");
+    navigate("/");
+  };
   return (
     <>
       <nav
@@ -24,11 +23,9 @@ export default function AdminNavbar() {
               </a>
             </li>
             <li className="nav-item">
-              <li  className="nav-link">
+              <li className="nav-link">
                 <span data-feather="file"></span>
-                <button onClick={ handleLogout}>
-                 Logout
-                </button>
+                <button onClick={handleLogout}>Logout</button>
               </li>
             </li>
             <li className="nav-item">
@@ -41,6 +38,13 @@ export default function AdminNavbar() {
               <NavLink to="/products" className="nav-link">
                 <span data-feather="shopping-cart"></span>
                 Products
+              </NavLink>
+            </li>
+
+            <li class="nav-item">
+              <NavLink to="/sales" class="nav-link">
+              <span data-feather="shopping-cart"></span>
+                Sales
               </NavLink>
             </li>
           </ul>

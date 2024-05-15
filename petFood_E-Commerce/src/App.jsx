@@ -49,6 +49,7 @@ export default function App() {
         <Route path='/users' element={ <Users />  } />
         <Route path='/products' element={ <Products />  } />
         <Route path='/products/:id' element={ <Update  />  } />
+        <Route path='/sales' element={ <Revanue />  } />
       </Routes>
       )
 
@@ -68,7 +69,6 @@ export default function App() {
           <Route path="/payment/success" element={<SuccessPayment/>}/>
           <Route path='/dashbord' element={ <Dashbord />  } />
           <Route path='/order' element={ <Order />  } />
-          <Route path='/sales' element={ <Revanue />  } />
 
 
 

@@ -157,6 +157,7 @@ export default function AddToCart() {
 
   const handlePay = async (id) => {
     try {
+     if(cart.length !== 0 && cart.length !== undefined){
       const jwtToken = localStorage.getItem("userTocken");
       if (!jwtToken) {
         toast.error("Token is not available");
@@ -178,11 +179,14 @@ export default function AddToCart() {
       const url=response.data.url
       const conformation=window.confirm("Payment session created. Redirecting to the payment gateway. Continue?")
       if(conformation)window.location.replace(url)
+     }
+    else toast.error("cart is empty please add to cart products")
     
     } catch (error) {
       toast.error("Error making payment:", error);
     }
   };
+  
   
 
   return (

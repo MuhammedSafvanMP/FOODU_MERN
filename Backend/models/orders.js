@@ -35,6 +35,10 @@ const ordersSchema = new mongoose.Schema({
     paymentId: {
         type: String,
         required: true
+    },
+    quantity:{
+        type: Array,
+        default: null,
     }
     
 })

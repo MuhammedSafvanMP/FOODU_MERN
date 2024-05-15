@@ -11,6 +11,8 @@ export default function Users() {
 
   const [allUsers, setAllUsers] = useState([]);
 
+  const [TRue, setFalse] = useState(true);
+
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -99,6 +101,7 @@ export default function Users() {
   }
 
 
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -127,16 +130,16 @@ export default function Users() {
                     <td>{user.username}</td>
                     <td>{user.email}</td>
                     <td >
-                    <TbLockCancel style={{fontSize: "1rem"}} onClick={() =>  handleBlock(user._id)} />
+                    <TbLockCancel style={{fontSize: "1rem", cursor: "pointer", backgroundColor :  user.isDeleted == true ? "red" : "green" }} onClick={() =>  handleBlock(user._id)} />
                     </td>
                     <td >
-                    <TbLockCheck style={{fontSize: "1rem"}}  onClick={() => handleUnBlock(user._id)} />
+                    <TbLockCheck style={{fontSize: "1rem", cursor: "pointer", backgroundColor :  user.isDeleted == false ? "green" : "red"  }}  onClick={() => handleUnBlock(user._id)} />
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
+          </div> 
         </main>
       </div>
     </div>

@@ -276,11 +276,6 @@ export default function Header() {
                       <a class="nav-link">Order</a>
                     </NavLink>
                   </li>
-                  <li class="nav-item">
-                    <NavLink to="/sales">
-                      <a class="nav-link">Sales</a>
-                    </NavLink>
-                  </li>
                 </ul>
                 <div className="d-none d-lg-flex align-items-end">
                   <ul className="d-flex justify-content-end list-unstyled m-0">

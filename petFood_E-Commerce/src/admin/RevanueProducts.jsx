@@ -1,82 +1,65 @@
-import React, { useContext } from 'react'
-import { globalContext } from '../context/GlobalContext';
+import React, { useContext } from "react";
+import { globalContext } from "../context/GlobalContext";
 
-export default function RevanueProducts() {
-    const [
-        handleAdd,
-        handleLike,
-        filteredData,
-        setFilteredData,
-        user,
-        setUser,
-        search,
-        setSearch,
-        handleSignup,
-        show,
-        setShow,
-        products,
-        setProducts,
-      ] = useContext(globalContext);
+export default function RevenueProducts() {
+  const [
+    handleAdd,
+    handleLike,
+    filteredData,
+    setFilteredData,
+    user,
+    setUser,
+    search,
+    setSearch,
+    handleSignup,
+    show,
+    setShow,
+    products,
+    setProducts,
+  ] = useContext(globalContext);
 
-      
   return (
-    <>
-    <section class="content-info">
-   <div class="container paddings-mini">
-      <div class="row">
-         <div class="col-lg-12">
-            <table class="table-striped table-responsive table-hover result-point">
-               <thead class="point-table-head">
+    <section className="content-info">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="table-responsive">
+              <table className="table table-striped table-hover">
+                <thead>
                   <tr>
-                     <th class="text-left">No</th>
-                     <th class="text-left">Image</th>
-                     <th class="text-center">title</th>
-                     <th class="text-center">Price</th>
-                     <th class="text-center">stock</th>
-                   
+                    <th className="text-left">No</th>
+                    <th className="text-left">Image</th>
+                    <th className="text-center">Title</th>
+                    <th className="text-center">Price</th>
+                    <th className="text-center">Stock</th>
+                    <th className="text-center">Total Stock Price</th>
                   </tr>
-               </thead>
-               <tbody class="text-center">
-               
-
-{
-products &&
-    products?.map((product, index) => {
-        return(
-
-            <>
-                   <tr>
-                     <td class="text-left number">{index + 1}<i class="fa fa-caret-up" aria-hidden="true"></i></td>
-                     <td class="text-left">
-                        <img width={"100px"} src={product.productImg} alt="product_image" />
-                     </td>
-                     <td>{product.title}</td>
-                     <td>{product.price}</td>
-                     <td>{product.stock}</td>
-                
-                    
-                  </tr>
-            </>
-
-        )
-    })
-
-               
-               
-               }
-
-
-               
-                  
-                  
-        
-               </tbody>
-            </table>
-         </div>
+                </thead>
+                <tbody>
+                  {products &&
+                    products.map((product, index) => (
+                      <tr key={product._id}>
+                        <td className="text-left number">{index + 1}</td>
+                        <td className="text-left">
+                          <img
+                            className="img-fluid"
+                            src={product.productImg}
+                            alt="product_image"
+                            width={"150px"}
+                          />
+                        </td>
+                        <td>{product.title}</td>
+                        <td>{product.price}</td>
+                        <td>{product.stock == 0 ? "no stock" : product.stock}</td>
+                        <td>{product.price * product.stock}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
-   </div>
-   
-</section>
-    </>
-  )
+    </section>
+  );
 }
