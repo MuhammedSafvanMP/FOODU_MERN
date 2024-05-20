@@ -30,21 +30,23 @@ export default function AdminNavbar() {
             </li>
             <li className="nav-item">
               <NavLink to="/users" className="nav-link">
-                <span data-feather="file"></span>
                 Users
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/products" className="nav-link">
-                <span data-feather="shopping-cart"></span>
                 Products
               </NavLink>
             </li>
 
             <li class="nav-item">
               <NavLink to="/sales" class="nav-link">
-              <span data-feather="shopping-cart"></span>
                 Sales
+              </NavLink>
+            </li>
+            <li class="nav-item">
+              <NavLink to="/stock" class="nav-link">
+                Stock
               </NavLink>
             </li>
           </ul>

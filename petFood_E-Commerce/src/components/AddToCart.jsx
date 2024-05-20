@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { globalContext } from "../context/GlobalContext";
-import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
+import { FaPlusSquare, FaMinusSquare, FaTimes, FaLongArrowAltLeft } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import instance from "../Axios";
 
 export default function AddToCart() {
   const [
@@ -22,306 +23,179 @@ export default function AddToCart() {
     products,
     setProducts,
   ] = useContext(globalContext);
+
   const [total, setTotal] = useState([]);
   const [cart, setCart] = useState([]);
 
-  useEffect(() => {
-    const getCart = async () => {
-      try {
-        const jwtToken = localStorage.getItem("userTocken");
-        if (!jwtToken) {
-          toast.error("Token is not available");
-          return;
-        }
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: jwtToken,
-          },
-        };
-        const response = await axios.get(
-          `http://localhost:3028/api/users/${user?._id}/cart`,
-          config
-        );
-        setCart(response.data);
-      } catch (error) {
-        toast.error("Error fetching cart:", error);
-      }
-    };
-
-    const fullQuantity = async () => {
-      try {
-        const jwtToken = localStorage.getItem("userTocken");
-        if (!jwtToken) {
-          toast.error("Token is not available");
-          return;
-        }
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: jwtToken,
-          },
-        };
-        const response = await axios.get(
-          `http://localhost:3028/api/users/${user?._id}/total`,
-          config
-        );
-        setTotal(response.data);
-      } catch (error) {
-        toast.error("Error fetching total quantity:", error);
-      }
-    };
-
-    fullQuantity();
-    getCart();
-  }, [user]);
-
+  const Navigate = useNavigate();
 
   const Increment = async (id) => {
-    window.location.reload();
     try {
-      const jwtToken = localStorage.getItem("userTocken");
-      if (!jwtToken) {
-        toast.error("Token is not available");
-        return;
+      const res = await instance.patch(`/users/${user?._id}/cart/${id}/increment`);
+      if (res.status === 201) {
+        toast.success(res.data.message);
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: jwtToken,
-        },
-      };
-      const response = await axios.patch(
-        `http://localhost:3028/api/users/${user?._id}/cart/${id}/increment`,
-        {},
-        config
-      );
-      if (response.status === 201) {
-        toast.success("Product quantity incremented");
-      }
-    } catch (error) {
-      toast.error("Error incrementing cart item:", error);
+    } catch (e) {
+      toast.error(e.response.data.message);
     }
   };
 
   const Decrement = async (id) => {
-    window.location.reload();
     try {
-      const jwtToken = localStorage.getItem("userTocken");
-      if (!jwtToken) {
-        toast.error("Token is not available");
-        return;
+      const res = await instance.patch(`/users/${user?._id}/cart/${id}/decrement`);
+      if (res.status === 201) {
+        toast.success(res.data.message);
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: jwtToken,
-        },
-      };
-      const response = await axios.patch(
-        `http://localhost:3028/api/users/${user?._id}/cart/${id}/decrement`,
-        {},
-        config
-      );
-      if (response.status === 200) {
-        toast.success("Product quantity decremented");
-      }
-    } catch (error) {
-      toast.error("Error decrementing cart item:", error);
+    } catch (e) {
+      toast.error(e.response.data.message);
     }
   };
 
   const handleDelete = async (id) => {
-    window.location.reload();
     try {
-      const jwtToken = localStorage.getItem("userTocken");
-      if (!jwtToken) {
-        toast.error("Token is not available");
-        return;
+      const res = await instance.delete(`/users/${user?._id}/cart/${id}/remove`);
+      if (res.status === 200) {
+        toast.success(res.data.message);
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: jwtToken,
-        },
-      };
-      const response = await axios.delete(
-        `http://localhost:3028/api/users/${user?._id}/cart/${id}/remove`,
-        config
-      );
-      if (response.status === 200) alert("Product removed successfully");
-    } catch (error) {
-      toast.error(error.response.data.message);
+    } catch (e) {
+      toast.error(e.response.data.message);
     }
   };
+
 
   const handlePay = async (id) => {
     try {
-     if(cart.length !== 0 && cart.length !== undefined){
-      const jwtToken = localStorage.getItem("userTocken");
-      if (!jwtToken) {
-        toast.error("Token is not available");
-        return;
+      const res = await instance.post(`/users/${id}/payment`);
+      if (res.status === 200) {
+        toast.success("Order now!");
+        const url = res.data.url;
+        const confirmation = window.confirm("Payment session created. Redirecting to the payment gateway. Continue?");
+        if (confirmation) window.location.replace(url);
+      } else {
+        toast.error("Cart is empty, please add products to the cart.");
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: jwtToken,
-        },
-      };
-
-      const response = await axios.post(
-        `http://localhost:3028/api/users/${id}/payment `,
-        {},
-        config
-      );
-      if (response.status === 200) toast.success("order now!");
-      const url=response.data.url
-      const conformation=window.confirm("Payment session created. Redirecting to the payment gateway. Continue?")
-      if(conformation)window.location.replace(url)
-     }
-    else toast.error("cart is empty please add to cart products")
-    
-    } catch (error) {
-      toast.error("Error making payment:", error);
+    } catch (e) {
+      if (e.response && e.response.data && e.response.data.message) {
+        toast.error(e.response.data.message);
+      } else {
+        toast.error("An error occurred. Please try again.");
+      }
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const cartResponse = await instance.get(`/users/${user?._id}/cart`);
+        setCart(cartResponse.data.data);
   
+        const totalResponse = await instance.get(`/users/${user?._id}/total`);
+        setTotal(totalResponse.data);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    };
+  
+    if (user?._id) {
+      fetchData();
+    }
+  }, [user?._id]); 
   
 
   return (
-    <>
-      <section className="h-100 h-custom" style={{ backgroundColor: "#eee" }}>
-        <div className="container py-5 h-100">
-          <div className="row d-flex justify-content-center align-items-center h-100">
-            <div className="col">
-              <div className="card">
-                <div className="card-body p-4">
-                  <div className="row">
-                    <div className="col-lg-7">
-                      <h5 className="mb-3">
-                        <NavLink to="/" className="text-body">
-                          <i className="fas fa-long-arrow-alt-left me-2"></i>
-                          Continue shopping
-                        </NavLink>
-                      </h5>
-                      <hr />
-
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                          <p className="mb-1">Shopping cart</p>
-                          <p className="mb-0">
-                            You have {user && user.cart && user.cart.length}{" "}
-                            items in your cart
-                          </p>
-                        </div>
+    <section className="h-100 h-custom" style={{ backgroundColor: "#fff" }}>
+      <div className="container py-5 h-100">
+        <div className="row d-flex justify-content-center align-items-center h-100">
+          <div className="col-12">
+            <div className="card card-registration card-registration-2" style={{ borderRadius: "15px" }}>
+              <div className="card-body p-0">
+                <div className="row g-0">
+                  <div className="col-lg-8">
+                    <div className="p-5">
+                      <div className="d-flex justify-content-between align-items-center mb-5">
+                        <h1 className="fw-bold mb-0 text-black">Shopping Cart</h1>
+                        <h6 className="mb-0 text-muted">{cart.length} items</h6>
                       </div>
+                      <hr className="my-4" />
 
-                      {Array.isArray(cart) && cart.length !== 0 ? (
-                        cart.map((cartItem) => {
-                          if (cartItem.productId) {
-                          return (
-                            <div
-                              className="card mb-3"
-                              key={cartItem.productId._id}
-                            >
-                              <div className="card-body">
-                                <div className="d-flex justify-content-between">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <div>
-                                      {cartItem.productId.productImg && (
-                                        <img
-                                          src={cartItem.productId.productImg}
-                                          className="img-fluid rounded-3"
-                                          alt="Shopping item"
-                                          style={{ minWidth: "55px" }}
-                                        />
-                                      )}
-                                    </div>
-                                    <div className="ms-3">
-                                      <h5>{cartItem.productId.title}</h5>
-                                    </div>
-                                  </div>
-                                  <div className="d-flex flex-row align-items-center">
-                                    <div className="input-group product-qty align-items-center w-25">
-                                      <span className="input-group-btn">
-                                        <button
-                                          type="button"
-                                          className="quantity-left-minus btn btn-light btn-number"
-                                          data-type="minus"
-                                          onClick={() =>
-                                            Increment(cartItem.productId._id)
-                                          }
-                                        >
-                                          <FaPlusSquare />
-                                        </button>
-                                      </span>
-                                      <button>{cartItem.quantity}</button>
-                                      <span className="input-group-btn">
-                                        <button
-                                          type="button"
-                                          className="quantity-right-plus btn btn-light btn-number"
-                                          data-type="plus"
-                                          data-field=""
-                                          onClick={() =>
-                                            Decrement(cartItem.productId._id)
-                                          }
-                                        >
-                                          <FaMinusSquare />
-                                        </button>
-                                      </span>
-                                    </div>
-                                    <div style={{ width: "80px" }}>
-                                      <h5 className="mb-0">
-                                        $ {cartItem.productId.price}
-                                      </h5>
-                                    </div>
-                                    <a style={{ color: "#cecece" }}>
-                                      <MdDelete
-                                        style={{
-                                          fontSize: "3rem",
-                                          color: "black",
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() =>
-                                          handleDelete(cartItem.productId._id)
-                                        }
-                                      />
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
+                      {cart.length > 0 ? (
+                        cart.map((cartItem) => (
+                          <div key={cartItem.productId._id} className="row mb-4 d-flex justify-content-between align-items-center">
+                            <div className="col-md-2 col-lg-2 col-xl-2">
+                              <img
+                                src={cartItem.productId.productImg}
+                                className="img-fluid rounded-3"
+                                alt="product_image"
+                              />
                             </div>
-                          );
-                        }
-                        })
+                            <div className="col-md-3 col-lg-3 col-xl-3">
+                              <h6 className="text-muted">{cartItem.productId.category}</h6>
+                              <h6 className="text-black mb-0">{cartItem.productId.title}</h6>
+                              <h6 className="text-black mb-0">€ {cartItem.productId.price}</h6>
 
+                            </div>
+                            <div className="col-md-3 col-lg-3 col-xl-2 d-flex">
+                              <button
+                                className="btn btn-link px-2"
+                                onClick={() => Decrement(cartItem.productId._id)}
+                              >
+                                <FaMinusSquare />
+                              </button>
+                              <button>{cartItem.quantity}</button>
+
+                              <button
+                                className="btn btn-link px-2"
+                                onClick={() => Increment(cartItem.productId._id)}
+                              >
+                                <FaPlusSquare />
+                              </button>
+                            </div>
+                            <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                              <h6 className="mb-0">€ {cartItem.productId.price * cartItem.quantity}</h6>
+                            </div>
+              
+                            <div className="col-md-1 col-lg-1 col-xl-1 text-end">
+                              <a href="#!" className="text-muted" onClick={() => handleDelete(cartItem.productId._id)}>
+                                <FaTimes />
+                              </a>
+                            </div>
+                          </div>
+                        ))
                       ) : (
-                        <tr>
-                          <td colSpan="3">Cart empty</td>
-                        </tr>
+                        <div>Cart is empty</div>
                       )}
+                      <div className="pt-5">
+                        <h6 className="mb-0">
+                          <NavLink to="/" className="text-body">
+                            <FaLongArrowAltLeft className="me-2" onClick={() => Navigate("/") } />
+                            Back to shop
+                          </NavLink>
+                        </h6>
+                      </div>
                     </div>
-
-                 
-                    <div>
-                                  <h1>${total.totalAmount}</h1>
-                                  <h3>totalQuantity: {total.totalQuantity}</h3>
-                                  <button onClick={() => handlePay(user._id)}>Pay</button>
-                                </div>
-
-                    
+                  </div>
+                  <div className="col-lg-4 bg-grey">
+                    <div className="p-5">
+                      <hr className="my-4" />
+                      <div className="d-flex justify-content-between mb-5">
+                        <h5 className="text-uppercase">Total price</h5>
+                        <h5>€ {total.totalAmount}</h5>
+                      </div>
+                      <div className="d-flex justify-content-between mb-5">
+                        <h5 className="text-uppercase">Total product</h5>
+                        <h5>€ {total.totalQuantity}</h5>
+                      </div>
+                      <button type="button" className="btn btn-dark btn-block btn-lg" onClick={() => handlePay(user._id)}>
+                        Order now
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-     
-
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

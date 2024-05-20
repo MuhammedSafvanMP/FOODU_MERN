@@ -6,7 +6,7 @@ const productJoi = Joi.object({
     description: Joi.string().min(3).max(50).required(),
     price: Joi.number().integer().positive(),
     category: Joi.string().min(2).max(30).required(),
-    stock: Joi.number().integer().positive()
+    stock: Joi.number().integer().positive(),
 });
 
 export default productJoi;

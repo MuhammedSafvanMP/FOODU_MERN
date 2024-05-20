@@ -4,6 +4,7 @@ import { globalContext } from "../context/GlobalContext";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import toast from "react-hot-toast";
+import instance from "../Axios";
 
 export default function Wishlist() {
   const [
@@ -25,51 +26,42 @@ export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
   const Navigate = useNavigate();
 
+
+  
+
   useEffect(() => {
     const getWishlist = async () => {
       try {
-        const jwtToken = localStorage.getItem("userTocken");
-        if (!jwtToken) {
-          toast.error("Token is not available");
-          return;
-        }
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: jwtToken,
-          },
-        };
-        const response = await axios.get(`http://localhost:3028/api/users/${user?._id}/wishlist`, config);
-        setWishlist(response.data);
-      } catch (error) {
-        toast.error("Error fetching wishlist:", error);
+        await instance({
+          url: `/users/${user?._id}/wishlist`,
+          method: "GET",
+        }).then((res) => {
+          setWishlist(res.data.data);
+        });
+      } catch (e) {
+        toast.error(e.res.data.message);
       }
+
     };
     getWishlist();
-  }, [user]);
+  }, [user._id, wishlist]);
 
+  // delet wishlist items
   
   const handleDelete = async (id) => {
-    window.location.reload();
-    try {  
-      const jwtToken = localStorage.getItem("userTocken");
-      if (!jwtToken) {
-        toast.error("Token is not available");
-        return;
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: jwtToken,
-        },
-      };
-      const response = await axios.delete(`http://localhost:3028/api/users/${user?._id}/wishlist/${id}/remove`, config);
-      if(response.status === 200)
-        toast.success("Product removed successfully");
-    } catch (error) {
-      toast.error(error.response.data.message);
+    try {
+      await instance({
+        url: `/users/${user?._id}/wishlist/${id}/remove`,
+        method: "DELETE",
+      }).then((res) => {
+          toast.success(res.data.message);
+      });
+    } catch (e) {
+      toast.error(e.res.data.message);
     }
   }
+  
+ 
   
 
   return (
@@ -111,7 +103,7 @@ export default function Wishlist() {
                                   </NavLink>
                                 </h5>
                                 <p className="card-text">
-                                  Price: ${data.productId.price}.00
+                                  Price:€ {data.productId.price}.00
                                 </p>
                               </div>
                             </div>

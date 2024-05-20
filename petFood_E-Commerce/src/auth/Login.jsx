@@ -1,13 +1,10 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { globalContext } from "../context/GlobalContext";
 import toast from "react-hot-toast";
 
 
 export default function Login() {
-
-  const [handleAdd, handleLike, filteredData, setFilteredData, user, setUser, search, setSearch, handleSignup,show,setShow,products, setProducts] = useContext(globalContext);
 
   const [login, setLogin] = useState({ email: "", password: "" });
   const navigate = useNavigate();
@@ -29,14 +26,13 @@ export default function Login() {
       );
 
       if (response.status === 200) {
-        const userData = response.data.user; 
+        const userData = response.data.data; 
         const userCookie = response.data.token
 
         localStorage.setItem("userTocken", userCookie)
         localStorage.setItem("userId", userData._id);  
         toast.success("Login successful");
         navigate("/");
-        window.location.reload();
       } else {
         toast.error("Login failed. Please try again.");
       }

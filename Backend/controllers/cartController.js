@@ -59,7 +59,7 @@ export const addToCart = async (req, res) => {
 export const viewCart = async (req, res) => {
 
         const {id} = req.params; 
-        console.log(id, "id");
+
         const user = await User.findById(id)
         .populate({
             path: 'cart',
@@ -115,44 +115,45 @@ export const incrementCartItemQuantity = async (req, res) => {
 
 
 export const decrementCartItemQuantity = async (req, res) => {
-    
-        const userId = req.params.userid;
-        const productId = req.params.id;
-        // const  {quantityDecrement}  = req.body;  
-
-
-        // Find user by ID
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+   
+      const userId = req.params.userid;
+      const productId = req.params.id;
+  
+      // Find user by ID
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Find product by ID
+      const product = await Products.findById(productId);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      // Find cart item
+      let cartItem = await Cart.findOne({ userId: user._id, productId: product._id });
+      if (cartItem) {
+        // If the product already exists, decrement the quantity
+        if (cartItem.quantity > 1) {
+          if (product.stock < cartItem.quantity) {
+            return res.status(400).json({ status: "error", message: `Only ${product.stock} available` });
+          }
+          cartItem.quantity--;
+          await cartItem.save();
+        } else {
+          cartItem.quantity = 1;
+          await cartItem.save();
         }
+  
+        return res.status(201).json({ status: "Ok", message: "Quantity decremented" });
+      } else {
+        return res.status(404).json({ message: "Cart item not found" });
+      }
+  };
+  
 
-        // Find product by ID
-        const product = await Products.findById(productId);
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-
-        // Find or create cart item
-        let cartItem = await Cart.findOne({ userId: user._id, productId: product._id });
-        if (cartItem) {
-            // If the product already exists, decrement the quantity
-            if(cartItem.quantity  > 1){
-                if(product.stock <= cartItem.quantity){
-
-                cartItem.quantity --;
-                await cartItem.save();
-                }else res.status(404).json({ status: "error", message:`only ${product.quantity} available`});
-            }
-            else{
-                cartItem.quantity = 1
-                await cartItem.save();
-            }
-            
-        }
-        res.status(201).json({ status: "Ok", message: "Quantity decremented" });
-};
-
+// cart full quantity
 
 export const cartFullQuantity = async (req, res) => {
         

@@ -114,7 +114,7 @@ function Foodies() {
             {
             filteredData &&
               filteredData .map((food) => (
-                <div key={food}>
+                <div key={food._id}>
                   <div className="card position-relative">
                     <img
                       onClick={() => Navigate(`/product/${food._id}`)}
@@ -140,7 +140,7 @@ function Foodies() {
                           ))}
                         </span>
                         <h3 className="secondary-font text-primary">
-                          ${food.price}.00
+                        € {food.price}.00
                         </h3>
                         <div className="d-flex flex-wrap mt-2">
                           <a   onClick={() => (user && user.username ? handleAdd(food._id) : Navigate('/signup'))}

@@ -7,6 +7,7 @@ import { FaHeart } from "react-icons/fa";
 import { globalContext } from "../context/GlobalContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import instance from "../Axios";
 
 
  function SingleProduct() {
@@ -32,18 +33,22 @@ import toast from "react-hot-toast";
 
   useEffect(() => {
     const getsingleproduct = async () => {
+
       try {
-        const response = await axios.get(`http://localhost:3028/api/users/products/${id}`);
-        setSingleProduct(response.data.product);
-      } catch (error) {
-        toast.error("Error fetching single product:", error); 
+        await instance({
+          url: `/users/products/${id}`,
+          method: "GET",
+        }).then((res) => {
+          console.log(res, "eoiiie");
+          setSingleProduct(res.data.data);
+        });
+      } catch (e) {
+        toast.error(res.data.message);
       }
     };
   
     getsingleproduct();
   }, [id]);
-  
-
 
 
   // const product = foodData.find((data) => data.id == id);

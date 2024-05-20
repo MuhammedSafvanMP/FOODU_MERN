@@ -27,7 +27,7 @@ export default function Dashbord() {
       );
 
       if (response.status === 200) {
-        const AdminData = response.data.token;
+        const AdminData = response.data.data;
         localStorage.setItem("adminToken", AdminData)
 
        // Set user ID in local storage
@@ -39,7 +39,6 @@ export default function Dashbord() {
     } catch (error) {
        toast.error("Login failed. Please try again.", error);
     }
-
   };
 
 

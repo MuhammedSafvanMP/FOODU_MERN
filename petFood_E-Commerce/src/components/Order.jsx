@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { globalContext } from '../context/GlobalContext';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import instance from '../Axios';
+import moment from "moment";
 
 export default function Order() {
   const [
@@ -25,25 +26,20 @@ export default function Order() {
   useEffect(() => {
     const getOrder = async () => {
       try {
-        const jwtToken = localStorage.getItem('userTocken');
-        if (!jwtToken) {
-          toast.error('Token is not available');
-          return;
-        }
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: jwtToken,
-          },
-        };
-        const response = await axios.get(`http://localhost:3028/api/users/${user?._id}/orders`, config);
-        setOrder(response.data);
-      } catch (error) {
-        toast.error('Error fetching wishlist:', error);
-      }
+      const orders = await instance.get(`/users/${user?._id}/orders`);
+      setOrder(orders.data.data);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+
     };
     getOrder();
-  }, [user]);
+    console.log(order);
+  }, [user?._id]);
+
+
+  const date = null;
+
 
 
   return (
@@ -85,8 +81,8 @@ export default function Order() {
                       <input class="form-check-input" type="checkbox" />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{  Date(order.purchaseDate)}</td>
-                    <td>{order.orderTime}</td>
+                    <td> {new Date(order.purchaseDate).getUTCDate()}/ {new Date(order.purchaseDate).getMonth()} / { new Date(order.purchaseDate).getFullYear() }</td>
+                    <td>{ order.orderTime}</td>
                     <td>
                       <i class="fa fa-check-circle-o green"></i>
                       <span class="ms-1">Paid</span>
@@ -94,12 +90,12 @@ export default function Order() {
                     <td>
                       <ul>
                         {order.productId.map((product) => (
-                          <li key={product._id}>{product.title} -- <span> ${product.price}</span></li>
+                          <li key={product._id}>{product.title} -- <span>€ {product.price}</span></li>
                         ))}
                       </ul>
                     </td>
                     <td class="text-end">
-                      <span class="fw-bolder">${order.totalPrice}</span>{' '}
+                      <span class="fw-bolder">€ {order.totalPrice}</span>{' '}
                       <i class="fa fa-ellipsis-h ms-2"></i>
                     </td>
                   </tr>

@@ -17,13 +17,7 @@ export const signup = async (req, res) => {
         // }
 
         // Validate request body using Joi
-        const { result , error} = await authJoi.validateAsync(req.body);
-
-        if (error.isJoi === true) {
-            return res.status(422).json({ status: "error", message: "Validation Error", data: error.details });
-        }
-          
-      
+        const  result  = await authJoi.validateAsync(req.body);
 
         // Check if email already exists
         const existingUser = await User.findOne({ email: result.email });

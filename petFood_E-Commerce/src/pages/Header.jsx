@@ -5,6 +5,8 @@ import { IoSearch } from "react-icons/io5";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { globalContext } from "../context/GlobalContext";
 import axios from "axios";
+import instance from "../Axios";
+import toast from "react-hot-toast";
 
 export default function Header() {
   const Navigate = useNavigate();
@@ -26,20 +28,28 @@ export default function Header() {
   ] = useContext(globalContext);
 
   const handleLogout = () => {
-    window.location.reload();
     localStorage.removeItem("userTocken")
     localStorage.removeItem( "userId")
     Navigate("/");
   };
+
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const findUser = async () => {
-      const response =  await  axios.get(`http://localhost:3028/api/users/userid/${userId}`)
-         setUser(response.data)
+      try {
+        await instance({
+          url: `/users/userid/${userId}`,
+          method: "GET",
+        }).then((res) => {
+          setUser(res.data.data)
+          });
+        } catch (e) {
+          toast.error(e.res.data.message);
+        }
      }
      findUser()
-    }, [])
+    }, [userId, handleLogout])
 
 
   return (

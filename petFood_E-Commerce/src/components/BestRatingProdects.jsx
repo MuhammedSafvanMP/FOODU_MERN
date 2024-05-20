@@ -111,7 +111,7 @@ import { globalContext } from "../context/GlobalContext";
                             </span>
 
                             <h3 className="secondary-font text-primary">
-                              ${food.price}.00
+                            € {food.price}.00
                             </h3>
 
                             <div className="d-flex flex-wrap mt-3">
@@ -125,7 +125,7 @@ import { globalContext } from "../context/GlobalContext";
                                 </h5>
                               </a>
                               <a
-                                onClick={() => (user && user.username ?  handleLike(food._id) : Navigate('/signup'))}
+                                onClick={(e) => (user && user.username ?  handleLike(food._id) : Navigate('/signup'))}
                                 className="btn-wishlist px-4 pt-3 "
                               >
                                 <FaHeart

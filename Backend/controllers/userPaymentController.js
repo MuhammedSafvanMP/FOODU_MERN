@@ -172,8 +172,6 @@ export const OrderDetails = async (req, res) => {
             return res.status(404).json({ status: "error", message: "User not found" });
         }
 
-        
-
         res.status(200).json({  status: "Ok", message: "User order found", data: user.orders });
 };
 

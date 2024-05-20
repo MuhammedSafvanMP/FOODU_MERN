@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { globalContext } from "../context/GlobalContext";
+import AdminNavbar from "./AdminNavbar";
 
-export default function RevenueProducts() {
+export default function StockProducts() {
   const [
     handleAdd,
     handleLike,
@@ -19,6 +20,10 @@ export default function RevenueProducts() {
   ] = useContext(globalContext);
 
   return (
+    <>
+    
+    <AdminNavbar />
+    
     <section className="content-info">
       <div className="container">
         <div className="row">
@@ -61,5 +66,7 @@ export default function RevenueProducts() {
         </div>
       </div>
     </section>
+
+    </>
   );
 }

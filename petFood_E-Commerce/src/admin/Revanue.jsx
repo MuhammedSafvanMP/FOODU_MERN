@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import RevanueProducts from "./RevanueProducts";
 import toast from "react-hot-toast";
 import AdminNavbar from "./AdminNavbar";
 
@@ -10,12 +9,26 @@ export default function Revenue() {
   useEffect(() => {
     const getOrder = async () => {
       try {
+
+        const jwtToken = localStorage.getItem("adminToken");
+        if (!jwtToken) {
+          toast.error("Token is not available");
+          return;
+        }
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: jwtToken,
+          },
+        };
+
+
         const response = await axios.get(
-          `http://localhost:3028/api/admin/status`
+          `http://localhost:3028/api/admin/status`, config
         );
-        setSales(response.data);
+        setSales(response.data.data);
       } catch (error) {
-        toast.error("Error fetching sales:", error);
+        toast.error(error.response.data.message);
       }
     };
     getOrder();
@@ -96,7 +109,6 @@ export default function Revenue() {
         </table>
       </div>
 
-      <RevanueProducts />
 
       {sales.length !== 0 ? (
         <div className="text-center">

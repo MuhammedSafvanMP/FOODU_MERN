@@ -4,6 +4,7 @@ import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import instance from "../Axios";
 
 function Cards() {
   const [
@@ -28,18 +29,26 @@ function Cards() {
 
   useEffect(() => {
     const fetchProductImages = async () => {
+   
+      
+      
       try {
         if (search.trim() === "") {
-          // If search query is empty, set searchData to the entire products array
+
           setSearchData(products);
         } else {
-          // Fetch data based on the search query
-          const response = await axios.get(`http://localhost:3028/api/users/products/category/${search}`);
-          setSearchData(response.data.products);
+
+          await instance({
+            url: `/users/products/category/${search}`,
+            method: "GET",
+          }).then((res) => {
+            setSearchData(res.data.data);
+          });
         }
-      } catch (error) {
-        toast.error("Error fetching product data:", error);
+      } catch (e) {
+        toast.error(res.data.message);
       }
+
     };
 
     fetchProductImages();
@@ -78,7 +87,7 @@ function Cards() {
 
               .map((val) => {
                 return (
-                  <div className="col-lg-4 col-md-12 mb-4" key={val.id}>
+                  <div className="col-lg-4 col-md-12 mb-4" key={val._id}>
                     <div className="card">
                       <div
                         className="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
@@ -118,11 +127,11 @@ function Cards() {
                         <a href="" className="text-reset">
                           <p>{val.category}</p>
                         </a>
-                        <h6 className="mb-3">${val.price}.00</h6>
+                        <h6 className="mb-3">€ {val.price}.00</h6>
                       </div>
                       <div className="d-flex flex-wrap mt-3">
                         <a
-                          onClick={() =>
+                          onClick={(e) =>
                             show && show.name ? handleAdd(val.id) : Navigate('/signup')
                           }
                           className="btn-cart me-3 px-4 pt-3 pb-3"
@@ -131,7 +140,7 @@ function Cards() {
                           <h5 className="text-uppercase m-0">Add to Cart</h5>
                         </a>
                         <a
-                          onClick={() =>
+                          onClick={(e) =>
                             show && show.name ? handleLike(val.id) : Navigate('/signup')
                           }
                           className="btn-wishlist px-4 pt-3 "

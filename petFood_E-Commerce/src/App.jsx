@@ -20,6 +20,7 @@ import { globalContext } from './context/GlobalContext'
 import SuccessPayment from './components/SuccessPayment'
 import Order from './components/Order'
 import Revanue from './admin/Revanue'
+import StockProducts from './admin/StockProducts'
 // import axios from 'axios'
 
 
@@ -50,6 +51,8 @@ export default function App() {
         <Route path='/products' element={ <Products />  } />
         <Route path='/products/:id' element={ <Update  />  } />
         <Route path='/sales' element={ <Revanue />  } />
+        <Route path='/stock' element={ <StockProducts />  } />
+
       </Routes>
       )
 

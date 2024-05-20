@@ -38,7 +38,7 @@ export const adminLogin = async (req, res) => {
 export const allUsers = async (req, res) => {
         // find all users in db
 
-        const allusers = await User.find()
+        const allUsers = await User.find()
 
         if(allUsers.length === 0){
             return res.status(404).json({
