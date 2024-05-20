@@ -1,4 +1,4 @@
-import { useContext, memo } from "react";
+import { useContext, memo, useEffect } from "react";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { globalContext } from "../context/GlobalContext";
@@ -22,6 +22,7 @@ function Foodies() {
   ] = useContext(globalContext);
 
   
+
 
   const handleAll = () => {
     setFilteredData(products);
@@ -149,7 +150,7 @@ function Foodies() {
                           >
                             <h5 className="text-uppercase m-0">Add to Cart</h5>
                           </a>
-                          <a   onClick={() => (user && user.username ? handleLike(food._id) : Navigate('/signup'))}
+                          <a    onClick={() => (user && user.username ? handleLike(food._id) : Navigate('/signup'))}
                             className="btn-wishlist px-3 py-2"
                             style={{ cursor: "pointer" }}
                           >

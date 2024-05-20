@@ -99,8 +99,9 @@ export default function AddToCart() {
     if (user?._id) {
       fetchData();
     }
-  }, [user?._id]); 
+  }, [user?._id, cart, setCart]); 
   
+
 
   return (
     <section className="h-100 h-custom" style={{ backgroundColor: "#fff" }}>
@@ -120,24 +121,24 @@ export default function AddToCart() {
 
                       {cart.length > 0 ? (
                         cart.map((cartItem) => (
-                          <div key={cartItem.productId._id} className="row mb-4 d-flex justify-content-between align-items-center">
+                          <div key={cartItem.products._id} className="row mb-4 d-flex justify-content-between align-items-center">
                             <div className="col-md-2 col-lg-2 col-xl-2">
                               <img
-                                src={cartItem.productId.productImg}
+                                src={cartItem.products.productImg}
                                 className="img-fluid rounded-3"
                                 alt="product_image"
                               />
                             </div>
                             <div className="col-md-3 col-lg-3 col-xl-3">
-                              <h6 className="text-muted">{cartItem.productId.category}</h6>
-                              <h6 className="text-black mb-0">{cartItem.productId.title}</h6>
-                              <h6 className="text-black mb-0">€ {cartItem.productId.price}</h6>
+                              <h6 className="text-muted">{cartItem.products.category}</h6>
+                              <h6 className="text-black mb-0">{cartItem.products.title}</h6>
+                              <h6 className="text-black mb-0">€ {cartItem.products.price}</h6>
 
                             </div>
                             <div className="col-md-3 col-lg-3 col-xl-2 d-flex">
                               <button
                                 className="btn btn-link px-2"
-                                onClick={() => Decrement(cartItem.productId._id)}
+                                onClick={() => Decrement(cartItem.products._id)}
                               >
                                 <FaMinusSquare />
                               </button>
@@ -145,17 +146,17 @@ export default function AddToCart() {
 
                               <button
                                 className="btn btn-link px-2"
-                                onClick={() => Increment(cartItem.productId._id)}
+                                onClick={() => Increment(cartItem.products._id)}
                               >
                                 <FaPlusSquare />
                               </button>
                             </div>
                             <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                              <h6 className="mb-0">€ {cartItem.productId.price * cartItem.quantity}</h6>
+                              <h6 className="mb-0">€ {cartItem.products.price * cartItem.quantity}</h6>
                             </div>
               
                             <div className="col-md-1 col-lg-1 col-xl-1 text-end">
-                              <a href="#!" className="text-muted" onClick={() => handleDelete(cartItem.productId._id)}>
+                              <a  className="text-muted" style={{cursor: "pointer"}} onClick={() => handleDelete(cartItem.products._id)}>
                                 <FaTimes />
                               </a>
                             </div>

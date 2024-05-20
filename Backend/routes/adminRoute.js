@@ -3,7 +3,7 @@ import { adminDeleteProductById, adminProductByCategory, adminUpdateProducts, ad
 import uploadImage from "../middlewares/upload.js";
 import { adminToken } from "../middlewares/adminMiddleware.js";
 import {  adminBlockUserById, adminFindUserName, adminLogin, adminUnBlockUserById, adminViewUserById, allUsers } from "../controllers/adminController.js";
-import { adminOrderDetails, status } from "../controllers/adminOrders.js";
+import { Delivered, OntheWay, adminOrderDetails, shipped, status } from "../controllers/adminOrders.js";
 import { TrycatchMiddleware } from "../middlewares/error.js";
 
 const router = express.Router();
@@ -49,6 +49,12 @@ router.delete("/products/delete/:productId",  TrycatchMiddleware(adminDeleteProd
 
 // view all orders
 router.get('/orders', TrycatchMiddleware(adminOrderDetails));
+// shipped
+router.patch('/shipped/:id', TrycatchMiddleware(shipped));
+// on the way
+router.patch('/ontheway/:id', TrycatchMiddleware(OntheWay));
+// deliverd
+router.patch('/delivered/:id', TrycatchMiddleware(Delivered));
 // view all revenue status
 router.get('/status',  TrycatchMiddleware(status));
 

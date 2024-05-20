@@ -4,12 +4,12 @@ import mongoose from "mongoose";
 
 const ordersSchema = new mongoose.Schema({
 
-    userId: {
+    users: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
-    productId: [{
+    products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Products", 
         required: true,
@@ -24,7 +24,7 @@ const ordersSchema = new mongoose.Schema({
         required: true,
         default: new Date().toTimeString()
     },
-    orderId: {
+    order: {
         type: String,
         required: true,
     },
@@ -32,14 +32,19 @@ const ordersSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    paymentId: {
+    payment: {
         type: String,
         required: true
     },
     quantity:{
         type: Array,
         default: null,
-    }
+    },
+    orderStatus:{
+        type:String,
+        required:true,
+        default:"Ordered"
+    },
     
 })
 

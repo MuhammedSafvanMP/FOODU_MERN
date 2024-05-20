@@ -23,7 +23,7 @@ export const addToCart = async (req, res) => {
         }
 
         // Check if the product already exists in the cart
-        let cartItem = await Cart.findOne({ userId: user._id, productId: product._id });
+        let cartItem = await Cart.findOne({ users: user._id, products: product._id });
         
         if (cartItem) {
             // If the product already exists, increment the quantity
@@ -38,8 +38,8 @@ export const addToCart = async (req, res) => {
             // If the product doesn't exist, create a new cart item
             if(product.stock > 0){
             cartItem = await Cart.create({
-                userId: user._id,
-                productId: product._id,
+                users: user._id,
+                products: product._id,
                 quantity: 1
             });
         }
@@ -63,7 +63,7 @@ export const viewCart = async (req, res) => {
         const user = await User.findById(id)
         .populate({
             path: 'cart',
-            populate: { path: 'productId'}
+            populate: { path: 'products'}
         });
 
         if(!user){
@@ -99,7 +99,7 @@ export const incrementCartItemQuantity = async (req, res) => {
         }
 
         // Find or create cart item
-        let cartItem = await Cart.findOne({ userId: user._id, productId: product._id });
+        let cartItem = await Cart.findOne({ users: user._id, products: product._id });
         if (cartItem) {
             if(product.stock > 0){
 
@@ -132,7 +132,7 @@ export const decrementCartItemQuantity = async (req, res) => {
       }
   
       // Find cart item
-      let cartItem = await Cart.findOne({ userId: user._id, productId: product._id });
+      let cartItem = await Cart.findOne({ users: user._id, products: product._id });
       if (cartItem) {
         // If the product already exists, decrement the quantity
         if (cartItem.quantity > 1) {
@@ -160,7 +160,7 @@ export const cartFullQuantity = async (req, res) => {
         const userId = req.params.id;
         const user = await User.findById(userId).populate({
       path: "cart",
-      populate: { path: "productId" },
+      populate: { path: "products" },
     });
 
     if (!user) {
@@ -178,7 +178,7 @@ export const cartFullQuantity = async (req, res) => {
 
     // Calculate total amount and quantity
     cartProducts.forEach((item) => {
-      totalAmount += item.productId.price * item.quantity;
+      totalAmount += item.products.price * item.quantity;
       totalQuantity += item.quantity;
     });
 
@@ -207,7 +207,7 @@ export const removeCart = async (req, res) => {
         }
 
         // Find and delete cart item for the specific user and product
-        const cartItem = await Cart.findOneAndDelete({ userId: user._id, productId: product._id });
+        const cartItem = await Cart.findOneAndDelete({ users: user._id, products: product._id });
 
         if (!cartItem) {
             return res.status(400).json({  status: "error", message: "Product not found in the user's cart" });

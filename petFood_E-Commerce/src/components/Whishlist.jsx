@@ -44,7 +44,8 @@ export default function Wishlist() {
 
     };
     getWishlist();
-  }, [user._id, wishlist]);
+
+  }, [user._id, wishlist, setWishlist]);
 
   // delet wishlist items
   
@@ -80,7 +81,7 @@ export default function Wishlist() {
             <tbody>
               {Array.isArray(wishlist) && wishlist.length !== 0 ?  (
                 wishlist.map((data) => {
-                  if (data.productId) {
+                  if (data.products) {
                     return (
                       <tr key={data._id}>
                         <td className="py-4">
@@ -88,10 +89,10 @@ export default function Wishlist() {
                             <div className="col-lg-3">
                               <div className="card-image">
                                 <img
-                                  src={data.productId.productImg}
+                                  src={data.products.productImg}
                                   alt="cloth"
                                   className="img-fluid"
-                                  onClick={() => Navigate(`/product/${data.productId._id}`)}
+                                  onClick={() => Navigate(`/product/${data.products._id}`)}
                                 />
                               </div>
                             </div>
@@ -99,11 +100,11 @@ export default function Wishlist() {
                               <div className="card-detail ps-3">
                                 <h5 className="card-title">
                                   <NavLink className="text-decoration-none">
-                                    {data.productId.title}
+                                    {data.products.title}
                                   </NavLink>
                                 </h5>
                                 <p className="card-text">
-                                  Price:€ {data.productId.price}.00
+                                  Price:€ {data.products.price}.00
                                 </p>
                               </div>
                             </div>
@@ -120,7 +121,7 @@ export default function Wishlist() {
                           <div className="d-flex align-items-center">
                             <div className="me-4">
                               <button
-                                onClick={() => handleAdd(data.productId._id)}
+                                onClick={() => handleAdd(data.products._id)}
                                 className="btn btn-dark p-3 text-uppercase fs-6 btn-rounded-none w-100"
                               >
                                 Add to cart
@@ -129,7 +130,7 @@ export default function Wishlist() {
                             <div className="cart-remove">
                               <MdDelete
                                 style={{ fontSize: "3rem", cursor: "pointer" }}
-                                onClick={() => handleDelete(data.productId._id)}
+                                onClick={() => handleDelete(data.products._id)}
                               />
                             </div>
                           </div>

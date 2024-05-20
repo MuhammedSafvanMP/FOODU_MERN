@@ -28,6 +28,7 @@ export default function Order() {
       try {
       const orders = await instance.get(`/users/${user?._id}/orders`);
       setOrder(orders.data.data);
+      console.log(orders.data.data);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -85,11 +86,11 @@ export default function Order() {
                     <td>{ order.orderTime}</td>
                     <td>
                       <i class="fa fa-check-circle-o green"></i>
-                      <span class="ms-1">Paid</span>
+                      <span class="ms-1">{order.orderStatus}</span>
                     </td>
                     <td>
                       <ul>
-                        {order.productId.map((product) => (
+                        {order.products.map((product) => (
                           <li key={product._id}>{product.title} -- <span>€ {product.price}</span></li>
                         ))}
                       </ul>

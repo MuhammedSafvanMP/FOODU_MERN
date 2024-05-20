@@ -16,7 +16,7 @@ export const payment = async (req, res ) => {
     const userId = req.params.id;
     const user = await User.findById(userId).populate({
       path: "cart",
-      populate: { path: "productId" },
+      populate: { path: "products" },
     });
 
     if (!user) {
@@ -34,17 +34,17 @@ export const payment = async (req, res ) => {
     let totalQuantity = 0;
 
     const lineItems = cartProducts.map((item) => {
-      totalAmount += item.productId.price * item.productId.quantity;
+      totalAmount += item.products.price * item.products.quantity;
       totalQuantity += item.quantity;
 
       return {
         price_data: {
           currency: "inr",
           product_data: {
-            name: item.productId.title,
-            description: item.productId.description,
+            name: item.products.title,
+            description: item.products.description,
           },
-          unit_amount: Math.round(item.productId.price * 100),
+          unit_amount: Math.round(item.products.price * 100),
         },
         quantity: item.quantity,
       };
@@ -57,7 +57,7 @@ export const payment = async (req, res ) => {
       line_items: lineItems,
       mode: "payment",
       success_url: "http://localhost:5173/payment/success", // Replace with actual success URL
-      cancel_url: "https://example.com/cancel", // Replace with actual cancel URL
+      cancel_url: "http://localhost:5173/addcart", // Replace with actual cancel URL
     });
 
     if (!session) {
@@ -96,9 +96,10 @@ export const success = async (req, res) => {
     var quantitys = []
   
     for (const cartItem of cartItems) {
-      const productId = cartItem.productId;
+      const productId = cartItem.products;
       const quantity = cartItem.quantity;
        quantitys.push(quantity)
+
       // Find the product by its ID
       const product = await Products.findById(productId);
 
@@ -115,14 +116,13 @@ export const success = async (req, res) => {
     }
 
     // Create an order
-    const productIds = cartItems.map((item) => item.productId);
+    const productIds = cartItems.map((item) => item.products);
 
-    console.log(quantitys, "ioeiooi");
     const order = await Orders.create({
-      userId: userId,
-      productId: productIds,
-      orderId: session.id,
-      paymentId: `demo ${Date.now()}`,
+      users: userId,
+      products: productIds,
+      order: session.id,
+      payment: `demo ${Date.now()}`,
       totalPrice: session.amount_total / 100,
       quantity: quantitys
     });
@@ -165,7 +165,7 @@ export const OrderDetails = async (req, res) => {
 
         const user = await User.findById(userId).populate({
             path: 'orders',
-            populate: { path: 'productId' }
+            populate: { path: 'products' }
         });
 
         if (!user) {

@@ -11,7 +11,6 @@ export default function Users() {
 
   const [allUsers, setAllUsers] = useState([]);
 
-  const [TRue, setFalse] = useState(true);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -33,7 +32,6 @@ export default function Users() {
           config
         );
 
-        console.log(response.data.data);
         setAllUsers(response.data.data);
 
       } catch (error) {
@@ -42,7 +40,7 @@ export default function Users() {
     };
 
     fetchAllUsers();
-  }, []);
+  }, [allUsers, setAllUsers]);
 
   const handleBlock = async (userId) => {
 

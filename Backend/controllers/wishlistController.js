@@ -23,15 +23,15 @@ export const addToWishlist = async (req, res) => {
         }
 
         // Check if the product is already in the wishlist
-        let wishlistItem = await Wishlist.findOne({ userId: user._id, productId: product._id });
+        let wishlistItem = await Wishlist.findOne({ users: user._id, products: product._id });
         if (wishlistItem) {
             return res.status(400).json({ status: "error", message: "Product already exists in the wishlist" });
         }
 
         // Create a new wishlist item
         wishlistItem = await Wishlist.create({
-            userId: user._id,
-            productId: product._id,
+            users: user._id,
+            products: product._id,
             quantity: 1
         });
 
@@ -50,7 +50,7 @@ export const viewWishlist = async (req, res) => {
         const { id } = req.params; 
         const user = await User.findById(id).populate({
             path: 'wishlist',
-            populate: { path: 'productId' }
+            populate: { path: 'products' }
         });
 
         if (!user) {
@@ -86,7 +86,7 @@ export const removeWishlist = async (req, res) => {
         }
 
         // Find and delete wishlist item
-        const wishlistItem = await Wishlist.findOneAndDelete({ userId: user._id, productId: product._id });
+        const wishlistItem = await Wishlist.findOneAndDelete({ users: user._id, products: product._id });
         
         if (!wishlistItem) {
             return res.status(404).json({ status: "error", message: "Product not found in the user's wishlist" });

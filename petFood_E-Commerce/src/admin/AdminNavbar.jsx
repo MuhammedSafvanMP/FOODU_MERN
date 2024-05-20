@@ -1,5 +1,13 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { FaRegUser } from "react-icons/fa";
+import { FaCartArrowDown } from "react-icons/fa";
+import { FaCarTunnel } from "react-icons/fa6";
+import { GiShoppingCart } from "react-icons/gi";
+
+
+
+
 
 export default function AdminNavbar() {
   const navigate = useNavigate();
@@ -30,22 +38,26 @@ export default function AdminNavbar() {
             </li>
             <li className="nav-item">
               <NavLink to="/users" className="nav-link">
+              <FaRegUser />
                 Users
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/products" className="nav-link">
+              <FaCartArrowDown />
                 Products
               </NavLink>
             </li>
 
             <li class="nav-item">
               <NavLink to="/sales" class="nav-link">
+              <FaCarTunnel />
                 Sales
               </NavLink>
             </li>
             <li class="nav-item">
               <NavLink to="/stock" class="nav-link">
+              <GiShoppingCart />
                 Stock
               </NavLink>
             </li>

@@ -26,13 +26,87 @@ export default function Revenue() {
         const response = await axios.get(
           `http://localhost:3028/api/admin/status`, config
         );
-        setSales(response.data.data);
+        setSales(response.data);
       } catch (error) {
         toast.error(error.response.data.message);
       }
     };
     getOrder();
-  }, []);
+  }, [sales, setSales]);
+
+  const shipped = async (orderId) => {
+    try {
+
+      const jwtToken = localStorage.getItem("adminToken");
+      if (!jwtToken) {
+        toast.error("Token is not available");
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: jwtToken,
+        },
+      };
+
+
+      const response = await axios.patch(
+        `http://localhost:3028/api/admin/shipped/${orderId}`,{}, config
+      );
+      if(response.status === 200) toast.success(response.data.message);        
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
+  const ontheway = async (orderId) => {
+    try {
+
+      const jwtToken = localStorage.getItem("adminToken");
+      if (!jwtToken) {
+        toast.error("Token is not available");
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: jwtToken,
+        },
+      };
+
+
+      const response = await axios.patch(
+        `http://localhost:3028/api/admin/ontheway/${orderId}`, {}, config
+      );
+      if(response.status === 200) toast.success(response.data.message);        
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
+  const delivered = async (orderId) => {
+    try {
+      const jwtToken = localStorage.getItem("adminToken");
+      if (!jwtToken) {
+        toast.error("Token is not available");
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: jwtToken,
+        },
+      };
+  
+      const response = await axios.patch(
+        `http://localhost:3028/api/admin/delivered/${orderId}`, {}, config
+      );
+      if (response.status === 200) toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
 
   return (
     <>
@@ -52,21 +126,22 @@ export default function Revenue() {
               <th scope="col">Price</th>
               <th scope="col">Quantity</th>
               <th scope="col">Total Price</th>
+              <th scope="col">Order Status</th>
             </tr>
           </thead>
           <tbody>
             {sales.length !== 0 ? (
-              sales.alluser.user.map((details, index) =>
+              sales. alluser.user?.map((details, index) =>
                 details.orders.map((order, idx) => (
                   <tr key={`${index}-${idx}`}>
                     {idx === 0 && (
                       <td rowSpan={details.orders.length}>{index + 1}</td>
                     )}
                     <td>{details.username}</td>
-                    <td>{order.purchaseDate}</td>
+                    <td>{new Date(order.purchaseDate).getUTCDate()}/ {new Date(order.purchaseDate).getMonth()} / { new Date(order.purchaseDate).getFullYear() }</td>
                     <td>{order.orderTime}</td>
                     <td>
-                      {order.productId.map((product) => (
+                      {order.products.map((product) => (
                         <img
                           key={product._id}
                           width={"80px"}
@@ -76,12 +151,12 @@ export default function Revenue() {
                       ))}
                     </td>
                     <td>
-                      {order.productId.map((product) => (
+                      {order.products.map((product) => (
                         <div key={product._id}>{product.title}</div>
                       ))}
                     </td>
                     <td>
-                      {order.productId.map((product) => (
+                      {order.products.map((product) => (
                         <div key={product._id}>${product.price}</div>
                       ))}
                     </td>
@@ -91,12 +166,20 @@ export default function Revenue() {
                       ))}
                     </td>
                     <td>
-                      {order.productId.map((product, index) => (
+                      {order.products.map((product, index) => (
                         <div key={product._id}>
                           ${product.price * order.quantity[index]}
                         </div>
                       ))}
                     </td>
+
+                      <td>
+                        <button style={{background: order.orderStatus === "Ordered" ? "green" : "white" }}  >Ordered</button>
+                        <button  style={{background: order.orderStatus === "Shipped" ? "green" : "white" }}  onClick={() => shipped(order._id)}>Shipped</button>
+                        <button style={{background: order.orderStatus == "On the way" ? "green" : "white" }}  onClick={() => ontheway(order._id)}>On the wary</button>
+                        <button style={{ background: order.orderStatus === "Delivered" ? "green" : "white" }} onClick={() => delivered(order._id)}>Delivered</button>
+                      </td>
+
                   </tr>
                 ))
               )

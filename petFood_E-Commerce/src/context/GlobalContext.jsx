@@ -12,7 +12,7 @@ export const GlobalProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [products, setProducts] = useState([]);
-  const [show, setShow] = useState(null);
+  const [show, setShow] = useState([]);
   const [user, setUser] = useState([]);
   const [dashbord, setDashBord] = useState({});
 
