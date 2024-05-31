@@ -17,7 +17,6 @@ import { globalContext } from "../context/GlobalContext";
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,

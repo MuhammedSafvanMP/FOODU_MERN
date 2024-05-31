@@ -14,6 +14,10 @@ const wishlistSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         default: 1 // Default quantity is 1
+    },
+    active: {
+        type: Boolean,
+        default: true,
     }
 });
 

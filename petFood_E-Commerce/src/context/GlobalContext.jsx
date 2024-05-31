@@ -16,6 +16,7 @@ export const GlobalProvider = ({ children }) => {
   const [user, setUser] = useState([]);
   const [dashbord, setDashBord] = useState({});
 
+
   // wishlist adding
 
   const handleLike = async (id) => {
@@ -82,37 +83,37 @@ export const GlobalProvider = ({ children }) => {
 
   // };
 
-  const handleSignup = (e) => {
-    e.preventDefault();
+  // const handleSignup = (e) => {
+  //   e.preventDefault();
 
-    if (!/^[a-zA-Z]+([ ]?[a-zA-Z]+)*$/.test(e.target.name.value)) {
-      alert("Please type a correct full name");
-      return;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.email.value)) {
-      alert("Your email is wrong");
-      return;
-    } else if (e.target.password.value.length < 8) {
-      alert("Password must be at least 8 characters long");
-      return;
-    }
+  //   if (!/^[a-zA-Z]+([ ]?[a-zA-Z]+)*$/.test(e.target.name.value)) {
+  //     alert("Please type a correct full name");
+  //     return;
+  //   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.email.value)) {
+  //     alert("Your email is wrong");
+  //     return;
+  //   } else if (e.target.password.value.length < 8) {
+  //     alert("Password must be at least 8 characters long");
+  //     return;
+  //   }
 
-    let name = e.target.name.value;
-    let email = e.target.email.value;
-    let password = e.target.password.value;
+  //   let name = e.target.name.value;
+  //   let email = e.target.email.value;
+  //   let password = e.target.password.value;
 
-    const userName = { name, email, password, likeItems: [], cartItems: [] };
+  //   const userName = { name, email, password, likeItems: [], cartItems: [] };
 
-    setUser([...user, userName]);
+  //   setUser([...user, userName]);
 
-    const existingUser = user.email === email;
+  //   const existingUser = user.email === email;
 
-    if (existingUser) {
-      alert("User already exists");
-      Navigate("/login");
-    }
+  //   if (existingUser) {
+  //     alert("User already exists");
+  //     Navigate("/login");
+  //   }
 
-    Navigate("/login");
-  };
+  //   Navigate("/login");
+  // };
 
   return (
     <globalContext.Provider
@@ -125,7 +126,6 @@ export const GlobalProvider = ({ children }) => {
         setUser,
         search,
         setSearch,
-        handleSignup,
         show,
         setShow,
         products,

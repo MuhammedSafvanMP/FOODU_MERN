@@ -16,11 +16,13 @@ export default function Wishlist() {
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,
     setProducts,
+    dashbord,
+    setDashBord,
+ 
   ] = useContext(globalContext);
 
   const [wishlist, setWishlist] = useState([]);
@@ -39,7 +41,7 @@ export default function Wishlist() {
           setWishlist(res.data.data);
         });
       } catch (e) {
-        toast.error(e.res.data.message);
+        toast.error(e.res?.data?.message);
       }
 
     };

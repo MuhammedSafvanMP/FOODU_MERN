@@ -14,7 +14,6 @@ export default function Order() {
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,
@@ -39,7 +38,6 @@ export default function Order() {
   }, [user?._id]);
 
 
-  const date = null;
 
 
 

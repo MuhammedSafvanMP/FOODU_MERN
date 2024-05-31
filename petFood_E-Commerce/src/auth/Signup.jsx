@@ -14,7 +14,8 @@ export default function SignUp() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  };        toast.error(error.response.data.message);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,11 +27,10 @@ export default function SignUp() {
       );
       
       if (response.status === 201) {
-        alert(response.data.message);
+        toast.success(response.data.message);
         navigate("/login");
       }
     } catch (error) {
-        toast.error(error.response.data.message);
     }
   };
 

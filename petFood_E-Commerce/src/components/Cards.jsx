@@ -16,7 +16,6 @@ function Cards() {
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,

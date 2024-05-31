@@ -14,16 +14,15 @@ function Foodies() {
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,
     setProducts,
+    dashbord,
+    setDashBord,
   ] = useContext(globalContext);
 
-  
-
-
+ 
   const handleAll = () => {
     setFilteredData(products);
   };
@@ -112,59 +111,70 @@ function Foodies() {
           </div>
 
           <div className="isotope-container row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-            {
-            filteredData &&
-              filteredData .map((food) => (
-                <div key={food._id}>
-                  <div className="card position-relative">
-                    <img
-                      onClick={() => Navigate(`/product/${food._id}`)}
-                      src={food.productImg}
-                      className="img-fluid rounded-4"
-                      style={{ cursor: "pointer" }}
-                      alt="image"
-                    />
-                    <div className="card-body p-3">
-                      <a>
-                        <h3 className="card-title pt-2 m-0">
-                          {food.title}
-                        </h3>
-                      </a>
-                      <div className="card-text">
-                        <span className="rating secondary-font">
-                          {Array.from({ length: food.rating }, (_, index) => (
-                            <FaStar
-                              key={index}
-                              icon="clarity:star-solid"
-                              className="text-primary"
-                            />
-                          ))}
-                        </span>
-                        <h3 className="secondary-font text-primary">
-                        € {food.price}.00
-                        </h3>
-                        <div className="d-flex flex-wrap mt-2">
-                          <a   onClick={() => (user && user.username ? handleAdd(food._id) : Navigate('/signup'))}
-                            className="btn-cart me-2 px-3 py-2"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <h5 className="text-uppercase m-0">Add to Cart</h5>
-                          </a>
-                          <a    onClick={() => (user && user.username ? handleLike(food._id) : Navigate('/signup'))}
-                            className="btn-wishlist px-3 py-2"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <FaHeart
-                              icon="fluent:heart-28-filled"
-                              className="fs-5"
-                            />
-                          </a>
+            {filteredData &&
+              filteredData.map((food) => {
+                return (
+                  <div key={food._id}>
+                    <div className="card position-relative">
+                      <img
+                        onClick={() => Navigate(`/product/${food._id}`)}
+                        src={food.productImg}
+                        className="img-fluid rounded-4"
+                        style={{ cursor: "pointer" }}
+                        alt="image"
+                      />
+                      <div className="card-body p-3">
+                        <a>
+                          <h3 className="card-title pt-2 m-0">{food.title}</h3>
+                        </a>
+                        <div className="card-text">
+                          <span className="rating secondary-font">
+                            {Array.from({ length: food.rating }, (_, index) => (
+                              <FaStar
+                                key={index}
+                                icon="clarity:star-solid"
+                                className="text-primary"
+                              />
+                            ))}
+                          </span>
+                          <h3 className="secondary-font text-primary">
+                            € {food.price}.00
+                          </h3>
+                          <div className="d-flex flex-wrap mt-2">
+                            <a
+                              onClick={() =>
+                                user && user.username
+                                  ? handleAdd(food._id)
+                                  : Navigate("/signup")
+                              }
+                              className="btn-cart me-2 px-3 py-2"
+                              style={{ cursor: "pointer" }}
+                            >
+                              <h5 className="text-uppercase m-0">Add to Cart</h5>
+                            </a>
+                            <a
+                              onClick={() =>
+                                user && user.username
+                                  ? handleLike(food._id)
+                                  : Navigate("/signup")
+                              }
+                              className="btn-wishlist px-3 py-2"
+                              style={{
+                                cursor: "pointer"
+                              }}
+                            >
+                              <FaHeart
+                                icon="fluent:heart-28-filled"
+                                className="fs-5"
+                              />
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       </section>

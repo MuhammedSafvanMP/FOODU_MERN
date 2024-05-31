@@ -20,7 +20,6 @@ import instance from "../Axios";
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,

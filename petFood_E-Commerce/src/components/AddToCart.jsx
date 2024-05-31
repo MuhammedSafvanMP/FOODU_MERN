@@ -17,7 +17,6 @@ export default function AddToCart() {
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,
