@@ -19,7 +19,6 @@ export default function Products() {
     setUser,
     search,
     setSearch,
-    handleSignup,
     show,
     setShow,
     products,

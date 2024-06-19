@@ -24,6 +24,12 @@ import instance from "../Axios";
     setShow,
     products,
     setProducts,
+    dashbord,
+    setDashBord,
+    active,
+    setActive,
+    wishActive,
+    setWishActive
   ] = useContext(globalContext);
 
   const { id } = useParams();
@@ -42,7 +48,7 @@ import instance from "../Axios";
           setSingleProduct(res.data.data);
         });
       } catch (e) {
-        toast.error(res.data.message);
+        toast.error(e.res?.data?.message);
       }
     };
   

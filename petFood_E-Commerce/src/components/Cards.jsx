@@ -20,6 +20,12 @@ function Cards() {
     setShow,
     products,
     setProducts,
+    dashbord,
+    setDashBord,
+    active,
+    setActive,
+    wishActive,
+    setWishActive,
   ] = useContext(globalContext);
 
   const Navigate = useNavigate();
@@ -28,15 +34,10 @@ function Cards() {
 
   useEffect(() => {
     const fetchProductImages = async () => {
-   
-      
-      
       try {
         if (search.trim() === "") {
-
           setSearchData(products);
         } else {
-
           await instance({
             url: `/users/products/category/${search}`,
             method: "GET",
@@ -45,14 +46,12 @@ function Cards() {
           });
         }
       } catch (e) {
-        toast.error(res.data.message);
+        toast.error(error.res?.data?.message);
       }
-
     };
 
     fetchProductImages();
   }, [search]); // Re-fetch data when the search query changes
-
 
   return (
     <>
@@ -85,6 +84,12 @@ function Cards() {
               // })
 
               .map((val) => {
+                const isActive = active?.find(
+                  (item) => item.products._id === val._id
+                );
+                const isActiveWish = wishActive?.find(
+                  (item) => item.products._id === val._id
+                );
                 return (
                   <div className="col-lg-4 col-md-12 mb-4" key={val._id}>
                     <div className="card">
@@ -95,7 +100,7 @@ function Cards() {
                         <img
                           style={{ cursor: "pointer" }}
                           src={val.productImg}
-                          onClick={() => Navigate(`/product/${val.id}`)}
+                          onClick={() => Navigate(`/product/${val._id}`)}
                           className="w-100"
                           alt="Product Image"
                         />
@@ -131,18 +136,25 @@ function Cards() {
                       <div className="d-flex flex-wrap mt-3">
                         <a
                           onClick={(e) =>
-                            show && show.name ? handleAdd(val.id) : Navigate('/signup')
+                            show && show.name
+                              ? handleAdd(val._id)
+                              : Navigate("/signup")
                           }
                           className="btn-cart me-3 px-4 pt-3 pb-3"
                           style={{ cursor: "pointer" }}
                         >
-                          <h5 className="text-uppercase m-0">Add to Cart</h5>
+                          <h5 className="text-uppercase m-0">
+                            {isActive ? "Added  Cart" : "Add to Cart"}
+                          </h5>{" "}
                         </a>
                         <a
                           onClick={(e) =>
-                            show && show.name ? handleLike(val.id) : Navigate('/signup')
+                            show && show.name
+                              ? handleLike(val._id)
+                              : Navigate("/signup")
                           }
                           className="btn-wishlist px-4 pt-3 "
+                          style={{ cursor: "pointer", color: isActiveWish ? "red" : "black" }}
                         >
                           <FaHeart
                             icon="fluent:heart-28-filled"

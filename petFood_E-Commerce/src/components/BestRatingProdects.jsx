@@ -10,17 +10,23 @@ import { globalContext } from "../context/GlobalContext";
   const Navigate = useNavigate();
   const [
     handleAdd,
-    handleLike,
-    filteredData,
-    setFilteredData,
-    user,
-    setUser,
-    search,
-    setSearch,
-    show,
-    setShow,
-    products,
-    setProducts,
+        handleLike,
+        filteredData,
+        setFilteredData,
+        user,
+        setUser,
+        search,
+        setSearch,
+        show,
+        setShow,
+        products,
+        setProducts,
+        dashbord,
+        setDashBord,
+        active,
+        setActive,
+        wishActive,
+        setWishActive
   ] = useContext(globalContext);
 
   useEffect(() => {
@@ -75,6 +81,8 @@ import { globalContext } from "../context/GlobalContext";
               products
                 .filter((food) => food.price >= 200)
                 .map((food) => {
+                  const isActive = active?.find((item) => item.products._id === food._id);
+                const isActiveWish = wishActive?.find((item) => item.products._id === food._id);
                   return (
                     <div className="swiper-slide" key={food._id}>
                       <div className="card position-relative">
@@ -119,13 +127,15 @@ import { globalContext } from "../context/GlobalContext";
                                 className="btn-cart me-3 px-4 pt-3 pb-3"
                                 style={{ cursor: "pointer" }}
                               >
-                                <h5 className="text-uppercase m-0">
-                                  Add to Cart
-                                </h5>
+                                 <h5 className="text-uppercase m-0">
+                                {isActive ? "Added  Cart" : "Add to Cart"}
+                              </h5>
                               </a>
                               <a
                                 onClick={(e) => (user && user.username ?  handleLike(food._id) : Navigate('/signup'))}
                                 className="btn-wishlist px-4 pt-3 "
+                                style={{ cursor: "pointer", color: isActiveWish ? "red" : "black" }}
+
                               >
                                 <FaHeart
                                   icon="fluent:heart-28-filled"

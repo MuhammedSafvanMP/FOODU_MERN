@@ -5,18 +5,17 @@ import AdminNavbar from "./AdminNavbar";
 export default function StockProducts() {
   const [
     handleAdd,
-    handleLike,
-    filteredData,
-    setFilteredData,
-    user,
-    setUser,
-    search,
-    setSearch,
-    handleSignup,
-    show,
-    setShow,
-    products,
-    setProducts,
+        handleLike,
+        filteredData,
+        setFilteredData,
+        user,
+        setUser,
+        search,
+        setSearch,
+        show,
+        setShow,
+        products,
+     
   ] = useContext(globalContext);
 
   return (

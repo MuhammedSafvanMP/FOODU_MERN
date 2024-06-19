@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { globalContext } from '../context/GlobalContext';
 import toast from 'react-hot-toast';
 import instance from '../Axios';
-import moment from "moment";
 
 export default function Order() {
   const [
@@ -10,14 +9,7 @@ export default function Order() {
     handleLike,
     filteredData,
     setFilteredData,
-    user,
-    setUser,
-    search,
-    setSearch,
-    show,
-    setShow,
-    products,
-    setProducts,
+    user
   ] = useContext(globalContext);
 
   const [order, setOrder] = useState([]);
@@ -27,14 +19,12 @@ export default function Order() {
       try {
       const orders = await instance.get(`/users/${user?._id}/orders`);
       setOrder(orders.data.data);
-      console.log(orders.data.data);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.res?.data?.message);
     }
 
     };
     getOrder();
-    console.log(order);
   }, [user?._id]);
 
 

@@ -45,7 +45,7 @@ export default function Header() {
           setUser(res.data.data)
           });
         } catch (e) {
-          toast.error(e.res.data.message);
+          toast.error(e.res?.data?.message);
         }
      }
      findUser()

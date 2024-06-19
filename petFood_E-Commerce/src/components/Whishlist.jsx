@@ -60,7 +60,7 @@ export default function Wishlist() {
           toast.success(res.data.message);
       });
     } catch (e) {
-      toast.error(e.res.data.message);
+      toast.error(e.res?.data?.message);
     }
   }
   

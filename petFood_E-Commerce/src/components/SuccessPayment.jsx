@@ -21,7 +21,7 @@ function SuccessPayment() {
           }
         });
       } catch (e) {
-        toast.error(e.res.data.message);
+        toast.error(e.res?.data?.message);
       }
 
 

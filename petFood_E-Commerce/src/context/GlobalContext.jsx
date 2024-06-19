@@ -15,6 +15,8 @@ export const GlobalProvider = ({ children }) => {
   const [show, setShow] = useState([]);
   const [user, setUser] = useState([]);
   const [dashbord, setDashBord] = useState({});
+  const [active, setActive] = useState([]);
+  const [wishActive, setWishActive] = useState([]);
 
 
   // wishlist adding
@@ -27,12 +29,10 @@ export const GlobalProvider = ({ children }) => {
       }).then((res) => {
         if (res.status === 200) {
           toast.success("Product added to wishlist!");
-        } else {
-          toast.error(response.data.message);
         }
       });
     } catch (e) {
-      toast.error(e.res.data.message);
+      toast.error(e.res?.data?.message);
     }
   };
 
@@ -46,12 +46,10 @@ export const GlobalProvider = ({ children }) => {
       }).then((res) => {
         if (res.status === 200) {
           toast.success("Product added to cart!");
-        } else {
-          toast.error(response.data.message);
-        }
+        } 
       });
     } catch (e) {
-      toast.error(e.res.data.message);
+      toast.error(e.res?.data?.message);
     }
   };
 
@@ -132,6 +130,10 @@ export const GlobalProvider = ({ children }) => {
         setProducts,
         dashbord,
         setDashBord,
+        active,
+        setActive,
+        wishActive,
+        setWishActive
       ]}
     >
       {children}

@@ -35,7 +35,7 @@ export default function AddToCart() {
         toast.success(res.data.message);
       }
     } catch (e) {
-      toast.error(e.response.data.message);
+      toast.error(e.res?.data?.message);
     }
   };
 
@@ -46,7 +46,7 @@ export default function AddToCart() {
         toast.success(res.data.message);
       }
     } catch (e) {
-      toast.error(e.response.data.message);
+      toast.error(e.res?.data?.message);
     }
   };
 
@@ -57,7 +57,7 @@ export default function AddToCart() {
         toast.success(res.data.message);
       }
     } catch (e) {
-      toast.error(e.response.data.message);
+      toast.error(e.res?.data?.message);
     }
   };
 
@@ -74,11 +74,7 @@ export default function AddToCart() {
         toast.error("Cart is empty, please add products to the cart.");
       }
     } catch (e) {
-      if (e.response && e.response.data && e.response.data.message) {
-        toast.error(e.response.data.message);
-      } else {
-        toast.error("An error occurred. Please try again.");
-      }
+      toast.error(e.res?.data?.message);
     }
   };
 
